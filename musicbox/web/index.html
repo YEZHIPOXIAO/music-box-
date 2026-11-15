@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="referrer" content="no-referrer" />
+<title>MusicBox · 聚合音乐播放器</title>
+<link rel="stylesheet" href="/static/style.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎵</text></svg>" />
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="logo">🎵</span>
+      <div>
+        <h1>MusicBox</h1>
+        <p class="muted">本地运行 · 无遥测</p>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-btn active" data-view="search">🔍 搜索</button>
+      <button class="nav-btn" data-view="playlists">📚 我的歌单</button>
+      <button class="nav-btn" data-view="history">🕘 最近播放</button>
+      <button class="nav-btn" data-view="accounts">👤 账号</button>
+    </nav>
+
+    <div class="providers" id="providerFilter"></div>
+
+    <div class="sidebar-foot">
+      <button class="ghost" id="openPrivacy">🔒 隐私</button>
+      <span class="muted small" id="versionLabel"></span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- search -->
+    <section class="view" id="view-search">
+      <form class="searchbar" id="searchForm" autocomplete="off">
+        <input id="searchInput" type="search" placeholder="搜索歌曲、歌手、专辑…" required />
+        <button type="submit">搜索</button>
+      </form>
+      <div class="toolbar">
+        <span class="muted" id="searchMeta">输入关键词开始搜索</span>
+        <label class="inline">
+          音质
+          <select id="qualitySelect">
+            <option value="auto">自动（最高可用）</option>
+            <option value="flac">无损</option>
+            <option value="320">320K</option>
+            <option value="128">128K</option>
+          </select>
+        </label>
+      </div>
+      <div class="errors" id="searchErrors"></div>
+      <div class="tracklist" id="searchResults"></div>
+    </section>
+
+    <!-- playlists -->
+    <section class="view hidden" id="view-playlists">
+      <div class="toolbar">
+        <form class="searchbar compact" id="newPlaylistForm">
+          <input id="newPlaylistName" placeholder="新歌单名称" maxlength="80" required />
+          <button type="submit">新建</button>
+        </form>
+        <span class="muted" id="playlistMeta"></span>
+      </div>
+      <div class="playlists" id="playlistList"></div>
+      <div class="tracklist" id="playlistTracks"></div>
+    </section>
+
+    <!-- history -->
+    <section class="view hidden" id="view-history">
+      <div class="toolbar">
+        <h2>最近播放</h2>
+        <button class="ghost" id="clearHistory">清空</button>
+      </div>
+      <div class="tracklist" id="historyList"></div>
+    </section>
+
+    <!-- accounts -->
+    <section class="view hidden" id="view-accounts">
+      <div class="toolbar"><h2>账号绑定</h2></div>
+      <p class="muted small">
+        账号 Cookie 只会加密保存在本机（AES + HMAC），不会上传到任何服务器；
+        未登录也能播放各平台的免费曲目。
+      </p>
+      <div class="accounts" id="accountList"></div>
+      <details class="help">
+        <summary>怎么复制 Cookie？</summary>
+        <ol>
+          <li>用浏览器打开对应音乐网站并登录。</li>
+          <li>按 F12 打开开发者工具 → Network（网络）标签。</li>
+          <li>刷新页面，点开任意一个请求，在 Headers → Request Headers 里找到 <code>Cookie</code>。</li>
+          <li>复制整行的值（形如 <code>a=1; b=2; …</code>），粘贴到上面的输入框。</li>
+        </ol>
+        <p class="muted small">提示：Cookie 等同于登录凭证，请勿分享给他人。本应用只在本机内存与本地加密库中使用它。</p>
+      </details>
+    </section>
+  </main>
+
+  <!-- player -->
+  <footer class="player">
+    <div class="now" id="nowPlaying">
+      <div class="cover" id="nowCover"></div>
+      <div class="meta">
+        <div class="title" id="nowTitle">未在播放</div>
+        <div class="artist muted" id="nowArtist">选择一首歌开始</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="buttons">
+        <button id="prevBtn" title="上一首">⏮</button>
+        <button id="playBtn" class="primary" title="播放/暂停">▶</button>
+        <button id="nextBtn" title="下一首">⏭</button>
+        <button id="modeBtn" title="播放模式">🔁</button>
+      </div>
+      <div class="progress-row">
+        <span id="curTime">0:00</span>
+        <input type="range" id="progress" min="0" max="1000" value="0" />
+        <span id="durTime">0:00</span>
+        <input type="range" id="volume" min="0" max="100" value="85" title="音量" />
+      </div>
+    </div>
+
+    <div class="lyrics" id="lyricsBox">
+      <div class="lyrics-inner" id="lyricsInner"><p class="muted small">歌词会显示在这里</p></div>
+    </div>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+<audio id="audio" preload="none" crossorigin="anonymous"></audio>
+<script src="/static/app.js"></script>
+</body>
+</html>

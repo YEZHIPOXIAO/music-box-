@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../../desktop/MusicBox.Desktop/Services/ApiClient.cs" Link="ApiClient.cs" />
+    <Compile Include="../../../desktop/MusicBox.Desktop/Services/AppDataPaths.cs" Link="AppDataPaths.cs" />
+    <Compile Include="../../../desktop/MusicBox.Desktop/Services/OfficialNavigationPolicy.cs" Link="OfficialNavigationPolicy.cs" />
+    <Compile Include="../../../desktop/MusicBox.Desktop/Services/PlaybackQueue.cs" Link="PlaybackQueue.cs" />
+  </ItemGroup>
+</Project>
